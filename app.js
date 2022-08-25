@@ -32,7 +32,7 @@ canvas.addEventListener("keydown", function (e) {
 	}
 	//console.log(e);
 });
-
+//keyup...when let to press the keyboard the move stop
 canvas.addEventListener("keyup", function (e) {
 	if (e.keyCode === 37) {
 		LEFT = false;
@@ -69,8 +69,10 @@ function move() {
 }
 
 //to move the ball
-setInterval(function () {
+function mainLoop() {
 	ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight); //to erase the ball after move
 	move();
 	drawBall(x, y, 20);
-}, 1000 / 60);
+	requestAnimationFrame(mainLoop);
+}
+requestAnimationFrame(mainLoop);
