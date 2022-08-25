@@ -13,17 +13,20 @@ function drawBall(x, y, r) {
 }
 canvas.addEventListener("keydown", function (e) {
 	if (e.keyCode === 37) {
-		console.log("LEFT");
+		x--;
 	}
 	if (e.keyCode === 38) {
-		console.log("UP");
+		y--;
 	}
 	if (e.keyCode === 39) {
-		console.log("RIGHT");
+		x++;
 	}
 	if (e.keyCode === 40) {
-		console.log("DOWN");
+		y++;
 	}
 	//console.log(e);
 });
-drawBall(x, y, 20);
+
+setInterval(function () {
+	drawBall(x, y, 20);
+}, 1000 / 60);
