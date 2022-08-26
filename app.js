@@ -1,78 +1,99 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-let x = 100;
-let y = 100;
+
+const BALLZ = [];
 let LEFT, UP, RIGHT, DOWN;
-
-function drawBall(x, y, r) {
-	ctx.beginPath();
-	ctx.arc(x, y, r, 0, 2 * Math.PI);
-	ctx.strokeStyle = "black";
-	ctx.stroke();
-	ctx.fillStyle = "red";
-	ctx.fill();
+let velocity = 4;
+class Ball {
+	constructor(x, y, r) {
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		this.velocity = 10;
+		this.player = false;
+		BALLZ.push(this);
+	}
+	drawBall() {
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+		ctx.strokeStyle = "black";
+		ctx.stroke();
+		ctx.fillStyle = "red";
+		ctx.fill();
+	}
 }
-// use keydown for start de move with the keyboard
-canvas.addEventListener("keydown", function (e) {
-	if (e.keyCode === 37) {
-		LEFT = true;
-		//x--;
-	}
-	if (e.keyCode === 38) {
-		UP = true;
-		//y--;
-	}
-	if (e.keyCode === 39) {
-		RIGHT = true;
-		//x++;
-	}
-	if (e.keyCode === 40) {
-		DOWN = true;
-		//y++;
-	}
-	//console.log(e);
-});
-//keyup...when let to press the keyboard the move stop
-canvas.addEventListener("keyup", function (e) {
-	if (e.keyCode === 37) {
-		LEFT = false;
-		//x--;
-	}
-	if (e.keyCode === 38) {
-		UP = false;
-		//y--;
-	}
-	if (e.keyCode === 39) {
-		RIGHT = false;
-		//x++;
-	}
-	if (e.keyCode === 40) {
-		DOWN = false;
-		//y++;
-	}
-	//console.log(e);
-});
 
-function move() {
+function keyControl(b) {
+	// use keydown for start de move with the keyboard
+	canvas.addEventListener("keydown", function (e) {
+		if (e.keyCode === 37) {
+			LEFT = true;
+			//x--;
+		}
+		if (e.keyCode === 38) {
+			UP = true;
+			//y--;
+		}
+		if (e.keyCode === 39) {
+			RIGHT = true;
+			//x++;
+		}
+		if (e.keyCode === 40) {
+			DOWN = true;
+			//y++;
+		}
+		//console.log(e);
+	});
+	//keyup...when let to press the keyboard the move stop
+	canvas.addEventListener("keyup", function (e) {
+		if (e.keyCode === 37) {
+			LEFT = false;
+			//x--;
+		}
+		if (e.keyCode === 38) {
+			UP = false;
+			//y--;
+		}
+		if (e.keyCode === 39) {
+			RIGHT = false;
+			//x++;
+		}
+		if (e.keyCode === 40) {
+			DOWN = false;
+			//y++;
+		}
+		//console.log(e);
+	});
+
 	if (LEFT) {
-		x--;
+		b.x -= b.velocity;
 	}
 	if (UP) {
-		y--;
+		b.y -= b.velocity;
 	}
 	if (RIGHT) {
-		x++;
+		b.x += b.velocity;
 	}
 	if (DOWN) {
-		y++;
+		b.y += b.velocity;
 	}
 }
 
 //to move the ball
 function mainLoop() {
 	ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight); //to erase the ball after move
-	move();
-	drawBall(x, y, 20);
+
+	BALLZ.forEach((b) => {
+		b.drawBall();
+		if (b.player) {
+			keyControl(b);
+		}
+	});
 	requestAnimationFrame(mainLoop);
 }
+
+let Ball1 = new Ball(200, 200, 30);
+let Ball2 = new Ball(300, 300, 20);
+Ball1.player = true;
+Ball2.player = true;
 requestAnimationFrame(mainLoop);
