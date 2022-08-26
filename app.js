@@ -3,13 +3,17 @@ const ctx = canvas.getContext("2d");
 
 const BALLZ = [];
 let LEFT, UP, RIGHT, DOWN;
-let velocity = 4;
+let friction = 0.1;
 class Ball {
 	constructor(x, y, r) {
 		this.x = x;
 		this.y = y;
 		this.r = r;
-		this.velocity = 10;
+		this.vel_x = 0;
+		this.vel_y = 0;
+		this.acc_x = 0;
+		this.acc_y = 0;
+		this.acceleration = 1;
 		this.player = false;
 		BALLZ.push(this);
 	}
@@ -20,6 +24,19 @@ class Ball {
 		ctx.stroke();
 		ctx.fillStyle = "red";
 		ctx.fill();
+	}
+	display() {
+		ctx.beginPath();
+		ctx.moveTo(this.x, this.y);
+		ctx.lineTo(this.x + this.acc_x * 100, this.y + this.acc_y * 100);
+		ctx.strokeStyle = "green";
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.moveTo(this.x, this.y);
+		ctx.lineTo(this.x + this.vel_x * 10, this.y + this.vel_y * 10);
+		ctx.strokeStyle = "blue";
+		ctx.stroke();
 	}
 }
 
@@ -66,17 +83,29 @@ function keyControl(b) {
 	});
 
 	if (LEFT) {
-		b.x -= b.velocity;
+		b.acc_x = -b.acceleration;
 	}
 	if (UP) {
-		b.y -= b.velocity;
+		b.acc_y = -b.acceleration;
 	}
 	if (RIGHT) {
-		b.x += b.velocity;
+		b.acc_x = +b.acceleration;
 	}
 	if (DOWN) {
-		b.y += b.velocity;
+		b.acc_y = +b.acceleration;
 	}
+	if (!UP && !DOWN) {
+		b.acc_y = 0;
+	}
+	if (!RIGHT && !LEFT) {
+		b.acc_x = 0;
+	}
+	b.vel_x += b.acc_x;
+	b.vel_y += b.acc_y;
+	b.vel_x *= 1 - friction;
+	b.vel_y *= 1 - friction;
+	b.x += b.vel_x;
+	b.y += b.vel_y;
 }
 
 //to move the ball
@@ -88,6 +117,7 @@ function mainLoop() {
 		if (b.player) {
 			keyControl(b);
 		}
+		b.display();
 	});
 	requestAnimationFrame(mainLoop);
 }
@@ -95,5 +125,5 @@ function mainLoop() {
 let Ball1 = new Ball(200, 200, 30);
 let Ball2 = new Ball(300, 300, 20);
 Ball1.player = true;
-Ball2.player = true;
+//Ball2.player = true;
 requestAnimationFrame(mainLoop);
