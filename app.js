@@ -4,6 +4,24 @@ const ctx = canvas.getContext("2d");
 const BALLZ = [];
 let LEFT, UP, RIGHT, DOWN;
 let friction = 0.1;
+class Vector {
+	constructor(x, y) {
+		this.x = x;
+		this.y = x;
+	}
+	add(v) {
+		return new Vector(this.x + v.x, this.y + v.y);
+	}
+	subtr(v) {
+		return new Vector(this.x - v.x, this.y - v.y);
+	}
+	mag() {
+		return Math.sqrt(this.x ** 2 + this.y ** 2);
+	}
+	mult(n) {
+		return new Vector(this.x * n, this.y * n);
+	}
+}
 class Ball {
 	constructor(x, y, r) {
 		this.x = x;
